@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/home/manhbui/anaconda3/envs/manhbq/bin/python",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.autoImportCompletions": true
+}
