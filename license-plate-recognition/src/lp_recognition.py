@@ -1,16 +1,16 @@
-import cv2
 import numpy as np
+import cv2
 from skimage import measure
 from imutils import perspective
 import imutils
-from database import *
 from src.data_utils import order_points, convert2Square, draw_labels_and_boxes
 from src.lp_detection.detect import detectNumberPlate
 from src.char_classification.model import CNN_Model
 from skimage.filters import threshold_local
 
 ALPHA_DICT = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H', 8: 'K', 9: 'L', 10: 'M', 11: 'N', 12: 'P',
-              13: 'R', 14: 'S', 15: 'T', 16: 'U', 17: 'V', 18: 'X', 19: 'Y', 20: 'Z', 21: '0', 22: '1', 23: '2', 24: '3',
+              13: 'R', 14: 'S', 15: 'T', 16: 'U', 17: 'V', 18: 'X', 19: 'Y', 20: 'Z', 21: '0', 22: '1', 23: '2',
+              24: '3',
               25: '4', 26: '5', 27: '6', 28: '7', 29: '8', 30: '9', 31: "Background"}
 
 LP_DETECTION_CFG = {
@@ -21,10 +21,12 @@ LP_DETECTION_CFG = {
 
 CHAR_CLASSIFICATION_WEIGHTS = './src/weights/weight.h5'
 
+
 class E2E(object):
     def __init__(self):
         self.image = np.empty((28, 28, 1))
-        self.detectLP = detectNumberPlate(LP_DETECTION_CFG['classes_path'], LP_DETECTION_CFG['config_path'], LP_DETECTION_CFG['weight_path'])
+        self.detectLP = detectNumberPlate(LP_DETECTION_CFG['classes_path'], LP_DETECTION_CFG['config_path'],
+                                          LP_DETECTION_CFG['weight_path'])
         self.recogChar = CNN_Model(trainable=False).model
         self.recogChar.load_weights(CHAR_CLASSIFICATION_WEIGHTS)
         self.candidates = []
@@ -41,7 +43,7 @@ class E2E(object):
         # Input image or frame
         self.image = image
 
-        for coordinate in self.extractLP():     # detect license plate by yolov3
+        for coordinate in self.extractLP():  # detect license plate by yolov3
             self.candidates = []
 
             # convert (x_min, y_min, width, height) to coordinate(top left, top right, bottom left, bottom right)
@@ -49,7 +51,7 @@ class E2E(object):
 
             # crop number plate used by bird's eyes view transformation
             LpRegion = perspective.four_point_transform(self.image, pts)
-           
+
             # segmentation
             self.segmentation(LpRegion)
 
@@ -93,7 +95,6 @@ class E2E(object):
             # find contours from mask
             contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-
             if len(contours) > 0:
                 contour = max(contours, key=cv2.contourArea)
                 (x, y, w, h) = cv2.boundingRect(contour)
@@ -125,7 +126,7 @@ class E2E(object):
 
         self.candidates = []
         for i in range(len(result_idx)):
-            if result_idx[i] == 31:    # if is background or noise, ignore it
+            if result_idx[i] == 31:  # if is background or noise, ignore it
                 continue
             self.candidates.append((ALPHA_DICT[result_idx[i]], coordinates[i]))
 
@@ -147,9 +148,8 @@ class E2E(object):
 
         if len(second_line) == 0:  # if license plate has 1 line
             license_plate = "".join([str(ele[0]) for ele in first_line])
-        else:   # if license plate has 2 lines
-            license_plate = "".join([str(ele[0]) for ele in first_line]) + "-" + "".join([str(ele[0]) for ele in second_line])
-        result = checkNp(license_plate)
-        if result is not None:
-            print("XE da dang ky")
+        else:  # if license plate has 2 lines
+            license_plate = "".join([str(ele[0]) for ele in first_line]) + "-" + "".join(
+                [str(ele[0]) for ele in second_line])
+
         return license_plate

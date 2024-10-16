@@ -27,7 +27,7 @@ class CNN_Model(object):
             self.model.summary()
             self.data = Datasets()
 
-        self.model.compile(loss="categorical_crossentropy", optimizer=adam_v2.Adam(1e-3), metrics=['acc'])
+        self.model.compile(loss="categorical_crossentropy", optimizer=adam_v2.Adam(1e-4), metrics=['acc'])
 
     def _build_model(self):
         # CNN model

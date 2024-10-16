@@ -2,7 +2,7 @@ import mysql.connector
 
 def connectDB():
     con = mysql.connector.connect(
-        host='localhost',
+        host='localhost:3307',
         user='root',
         password='',
         database='license_plate'
