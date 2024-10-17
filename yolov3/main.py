@@ -50,7 +50,7 @@ while(True):
                     text_size = cv2.getTextSize(lp, cv2.FONT_HERSHEY_SIMPLEX, 0.9, 2)[0]
                     text_x = int(plate[0])
                     text_y = int(plate[1]) - 5
-                    cv2.rectangle(frame, (text_x, text_y - text_size[1]), (text_x + text_size[0], text_y + 5),
+                    cv2.rectangle(frame, (text_x, text_y - text_size[1]), (text_x + text_size[0], text_y + 10),
                                   (255, 255, 255), -1)
 
                     # Vẽ chữ màu đen
