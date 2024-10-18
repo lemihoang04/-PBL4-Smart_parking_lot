@@ -3,7 +3,7 @@ import time
 from src.lp_recognition import E2E
 
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 cap.set(3,640) 
 cap.set(4,480) #set frame height
 cap.set(cv2.CAP_PROP_FPS, 60)

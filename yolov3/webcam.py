@@ -7,11 +7,12 @@ from IPython.display import display
 import os
 import time
 import argparse
+from ultralytics import YOLO
 import function.helper as helper
 
 # Hàm tải mô hình YOLO
 def load_models():
-    yolo_LP_detect = torch.hub.load('yolov5', 'custom', path='model/LP_detector_nano_61.pt', force_reload=True, source='local')
+    yolo_LP_detect = YOLO("E:/Python_Project/Python_project3/runs/detect/train2/weights/best.onnx")
     yolo_license_plate = torch.hub.load('yolov5', 'custom', path='model/LP_ocr_nano_62.pt', force_reload=True, source='local')
     yolo_license_plate.conf = 0.60
     return yolo_LP_detect, yolo_license_plate
@@ -19,7 +20,7 @@ def load_models():
 # Hàm xử lý khung hình và nhận diện biển số
 def process_frame(frame, yolo_LP_detect, yolo_license_plate):
     plates = yolo_LP_detect(frame)
-    list_plates = plates.pandas().xyxy[0].values.tolist()
+    list_plates = plates[0].boxes.data.tolist()
     list_read_plates = set()
     
     for plate in list_plates:
@@ -78,11 +79,11 @@ def main():
         frame, list_read_plates = process_frame(frame, yolo_LP_detect, yolo_license_plate)
         
         # Tính FPS nếu cần
-        # new_frame_time = time.time()
-        # fps = 1/(new_frame_time-prev_frame_time)
-        # prev_frame_time = new_frame_time
-        # fps = int(fps)
-        # cv2.putText(frame, str(fps), (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
+        new_frame_time = time.time()
+        fps = 1/(new_frame_time-prev_frame_time)
+        prev_frame_time = new_frame_time
+        fps = int(fps)
+        cv2.putText(frame, str(fps), (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
         
         cv2.imshow('frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):

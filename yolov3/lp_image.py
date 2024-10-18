@@ -10,12 +10,13 @@ import argparse
 import function.helper as helper
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-i', '--image', required=True, help='path to input image')
+ap.add_argument('-i', '--image', required=True, help='test_image/119.jpg')
 args = ap.parse_args()
 
-yolo_LP_detect = torch.hub.load('yolov5', 'custom', path='model/LP_detector.pt', force_reload=True, source='local')
-yolo_license_plate = torch.hub.load('yolov5', 'custom', path='model/LP_ocr.pt', force_reload=True, source='local')
-yolo_license_plate.conf = 0.60
+yolo_LP_detect = torch.hub.load('yolov5', 'custom', path='model/LP_detector.onnx', force_reload=True, source='local')
+yolo_license_plate = torch.hub.load('yolov5', 'custom', path='model/LP_ocr.onnx', force_reload=True, source='local')
+yolo_LP_detect.conf = 0.60
+yolo_license_plate.conf = 0.70
 
 img = cv2.imread(args.image)
 plates = yolo_LP_detect(img, size=640)
