@@ -41,7 +41,6 @@ def read_plate(yolo_license_plate, im):
                 LP_type = "2"
 
     y_mean = int(int(y_sum) / len(bb_list))
-    size = results.pandas().s
 
     # 1 line plates and 2 line plates
     line_1 = []
