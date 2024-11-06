@@ -1,0 +1,22 @@
+.section_register {
+	min-height: 100vh;
+	padding: 20px;
+	background-color: #f0f2f5;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.register-form {
+	border-radius: 10px;
+	background-color: #ffff;
+	box-sizing: border-box;
+	box-shadow: 0 2px 4px rgb(0, 0, 0 / 10%), 0 8px 16px rgb(0, 0, 0 / 10%);
+}
+.label {
+	color: gray;
+}
+.login {
+	color: rgb(112, 40, 247);
+	text-decoration: underline;
+	cursor: pointer;
+}
